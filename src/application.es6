@@ -1,11 +1,11 @@
 import React    from 'react'
 import ReactDOM from 'react-dom'
+import I        from 'immutable'
 
 class MrCss {
-  static shouldManuallyApplyStyles(element) {
-    if (!element.type)                     return true
-    if (!element.type._isDecoratedByMrCss) return true
-    return false
+  static isDecoratedByMrCss(element) {
+    if (!element.type) return false
+    return element.type._isDecoratedByMrCss
   }
 
   static flattenChildren(element) {
@@ -18,24 +18,32 @@ class MrCss {
     }
   }
 
-  static decorate(target) {
-    const originalRender = target.prototype.render
+  static manuallyApplyStyles(element) {
+    return React.cloneElement(element, { style: {background: 'red'} })
+  }
 
+  static recursivelyApplyStyles(element) {
+    if (MrCss.isDecoratedByMrCss(element) || !element.props) {
+      return element
+    } else {
+      return MrCss.applyStyles(element)
+    }
+  }
+
+  static applyStyles(element) {
+    const children     = MrCss.flattenChildren(element).map(MrCss.recursivelyApplyStyles)
+    const currentStyle = element.props.style || {}
+    return React.cloneElement(element, { children, style: { ...currentStyle, background: 'red' } })
+  }
+
+  static decorate(target) {
+    const originalRender       = target.prototype.render
     target._isDecoratedByMrCss = true
 
-    const newRender = function() {
+    target.prototype.render = function() {
       const originalElement = originalRender.bind(this)()
-      const children        = MrCss.flattenChildren(originalElement)
-
-      children.map((c) => {
-        console.log((c.type && c.type.name) || c)
-        console.log(MrCss.shouldManuallyApplyStyles(c))
-        console.log("")
-      })
-
-      return originalElement
+      return MrCss.applyStyles(originalElement)
     }
-    target.prototype.render = newRender
   }
 }
 
