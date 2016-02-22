@@ -2,6 +2,13 @@ import React    from 'react'
 import ReactDOM from 'react-dom'
 import I        from 'immutable'
 
+// TODO
+// ----
+// * When an element gets rendered, update all of its child components with its styles as their "parent" styles.
+// * When an element gets rendered, merge in the local styles to the "parent styles".
+// * Keep track of the current position through the rendering tree.
+// * Add child selectors, which make use of the current position in the tree.
+
 class MrCss {
   static isDecoratedByMrCss(element) {
     if (!element.type) return false
