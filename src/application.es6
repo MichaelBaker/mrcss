@@ -19,7 +19,7 @@ class MrCss {
   }
 
   static manuallyApplyStyles(element) {
-    return React.cloneElement(element, { style: {background: 'red'} })
+    return element
   }
 
   static recursivelyApplyStyles(element) {
@@ -30,10 +30,11 @@ class MrCss {
     }
   }
 
-  static applyStyles(element) {
-    const children     = MrCss.flattenChildren(element).map(MrCss.recursivelyApplyStyles)
-    const currentStyle = element.props.style || {}
-    return React.cloneElement(element, { children, style: { ...currentStyle, background: 'red' } })
+  static applyStyles(element, mrCssStyles=[]) {
+    const children                 = MrCss.flattenChildren(element).map(MrCss.recursivelyApplyStyles)
+    const stylesFromStyleAttribute = I.fromJS(element.props.style || {})
+    const calculatedStyles = I.fromJS(mrCssStyles).reduce((acc, newStyle) => acc.merge(newStyle), stylesFromStyleAttribute).toJS()
+    return React.cloneElement(element, { children, style: calculatedStyles })
   }
 
   static decorate(target) {
@@ -42,7 +43,18 @@ class MrCss {
 
     target.prototype.render = function() {
       const originalElement = originalRender.bind(this)()
-      return MrCss.applyStyles(originalElement)
+
+      if (this.getStyles && typeof this.getStyles !== 'function') {
+        throw new Error(`The getStyles property of ${target.name} is not a function, which it should be for it to work with MrCss.`)
+      }
+
+      const styles = this.getStyles ? this.getStyles() : []
+
+      if (!Array.isArray(styles)) {
+        throw new Error(`The getStyles property of ${target.name} does not return an array, which it ought to.`)
+      }
+
+      return MrCss.applyStyles(originalElement, styles)
     }
   }
 }
@@ -50,11 +62,15 @@ class MrCss {
 
 @MrCss.decorate
 class ChildTwo extends React.Component {
+  getStyles() {
+    return [{ color: 'green' }]
+  }
+
   render() {
     return (
-      <div className="childTwo">
-        hello
-      </div>
+      <p className="childTwo">
+        <i>hello</i>
+      </p>
     )
   }
 }
