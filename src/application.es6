@@ -9,6 +9,8 @@ import I        from 'immutable'
 // * Keep track of the current position through the rendering tree.
 // * Add child selectors, which make use of the current position in the tree.
 
+// * HANDLE TEXT NODES
+
 class MrCss {
   static decorate(target) {
     target.prototype._mrCssOriginalRender = target.prototype.render
@@ -18,18 +20,27 @@ class MrCss {
   static render() {
     const originalElement = this._mrCssOriginalRender()
     const component       = this.constructor.name
-    const elementTag      = originalElement.type || originalElement
+    const elementTag      = originalElement.type
     const parentPath      = this.props._mrCssParentPath || I.fromJS([])
     const path            = parentPath.push(I.fromJS({ component, elementTag }))
-    const newChildren     = React.Children.map(originalElement.props.children, (c) => {
-      return React.cloneElement(c, { _mrCssParentPath: path })
-    })
+    const newChildren     = React.Children.map(originalElement.props.children, c => MrCss.styleChildren(c, path))
 
     console.log(`Component:     ${component}`)
     console.log(`Rendered Type: ${elementTag}`)
     console.log(`Path:          ${path}`)
     console.log('')
     return React.cloneElement(originalElement, { _mrCssPath: path }, newChildren)
+  }
+
+  static styleChildren(element, path) {
+    if (!element.type)                return element
+    if (element._mrCssOriginalRender) return React.cloneElement(element, { _mrCssParentPath: path })
+
+    const children    = (element.props && element.props.children) || []
+    const elementTag  = element.type
+    const newPath     = path.push(I.fromJS({ elementTag }))
+    const newChildren = React.Children.map(children, (c) => MrCss.styleChildren(c, newPath))
+    return React.cloneElement(element, { _mrCssParentPath: path }, newChildren)
   }
 }
 
@@ -43,7 +54,12 @@ class ChildTwo extends React.Component {
   render() {
     return (
       <p className="childTwo">
-        <i>hello</i>
+        <p>
+          <span>
+            <i>hello</i>
+            <b>hello</b>
+          </span>
+        </p>
       </p>
     )
   }
