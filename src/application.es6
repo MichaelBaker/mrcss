@@ -8,12 +8,12 @@ class ChildTwo extends React.Component {
     return (
       <div className="childTwo">
         <span>
-          <i>hello</i>
-          <b>hello</b>
+          <i>hello i</i>
+          <b>hello b</b>
         </span>
         <p>
-          <i>hello</i>
-          <b>hello</b>
+          <i thingy={true}>hello thingy i</i>
+          <b>hello b</b>
         </p>
       </div>
     )
@@ -55,9 +55,15 @@ class Root extends React.Component {
   style() {
     return {
       color: 'green',
+      functionSelectors: [
+      ],
       childSelectors: {
+        "i": {
+          predicate:  (elem) => elem.props.thingy,
+          background: 'yellow'
+        },
         "span i": {
-          color: 'red'
+          color:     'red'
         },
 
         "p i": {
