@@ -17,35 +17,49 @@ export default class MrCss {
     const elementTag      = originalElement.type
 
     const parentPath      = this.props._mrCssParentPath || I([])
-    const path            = parentPath.push(I([component, elementTag]))
+    const parentSelectors = this.props._mrCssParentSelectors || new Selector()
 
-    const currentSelectors = this._mrCssParentSelectors || new Selector()
-    const newSelectors     = MrCss.objectToSelectors(currentSelectors, this.style && this.style())
+    const path = parentPath.push((() => {
+      if (component && elementTag) {
+        return I([component, elementTag])
+      } else if (component) {
+        return component
+      } else {
+        return elementTag
+      }
+    })())
+
+    const styles           = this.style && this.style()
+    const immutStyles      = I(styles || {})
+    const newSelectors     = MrCss.objectToSelectors(parentSelectors, immutStyles.get('childSelectors'))
+    const myStyles         = immutStyles.delete('childSelectors')
+    const finalStyles      = parentSelectors.find(path).reduce((acc, x) => acc.merge(x), myStyles)
 
     const newChildren = React.Children.map(originalElement.props.children, (c) => {
-      MrCss.styleChildren(c, path, newSelectors)
+      return MrCss.styleChildren(c, path, newSelectors)
     })
 
-    return React.cloneElement(originalElement, { _mrCssPath: path }, newChildren)
+    return React.cloneElement(originalElement, { style: finalStyles.toJS(), _mrCssPath: path }, newChildren)
   }
 
-  static styleChildren(element, path, selectors) {
+  static styleChildren(element, path, selector) {
     if (!element.type)                return element
-    if (element._mrCssOriginalRender) return React.cloneElement(element, { _mrCssParentSelectors: selectors, _mrCssParentPath: path })
+    if (element._mrCssOriginalRender) return React.cloneElement(element, { _mrCssParentSelectors: selector, _mrCssParentPath: path })
 
     const children    = (element.props && element.props.children) || []
     const elementTag  = element.type
     const newPath     = path.push(elementTag)
-    const newChildren = React.Children.map(children, (c) => MrCss.styleChildren(c, newPath))
+    const newChildren = React.Children.map(children, (c) => MrCss.styleChildren(c, newPath, selector))
+    const style       = selector.find(newPath).reduce((acc, x) => acc.merge(x), I({})).toJS()
 
-    return React.cloneElement(element, { _mrCssParentSelectors: selectors, _mrCssParentPath: path }, newChildren)
+    return React.cloneElement(element, { style, _mrCssParentSelectors: selector, _mrCssParentPath: path }, newChildren)
   }
 
   static objectToSelectors(oldSelectors, object) {
-    if (!object) return {}
+    if (!object) return oldSelectors
     return I(object).reduce((acc, value, selector) => {
       const selectorArray = selector.split(' ')
-      return oldSelectors.add(selectorArray, value)
+      return acc.add(selectorArray, value)
     }, oldSelectors)
   }
 }

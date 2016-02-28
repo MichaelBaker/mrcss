@@ -1,12 +1,3 @@
-// TODO
-// ----
-// * When an element gets rendered, update all of its child components with its styles as their "parent" styles.
-// * When an element gets rendered, merge in the local styles to the "parent styles".
-// * Keep track of the current position through the rendering tree.
-// * Add child selectors, which make use of the current position in the tree.
-
-// * HANDLE TEXT NODES
-
 import React    from 'react'
 import ReactDOM from 'react-dom'
 import MrCss    from 'mr-css.es6'
@@ -30,10 +21,29 @@ class ChildTwo extends React.Component {
 }
 
 @MrCss.decorate
-class ChildOne extends React.Component {
+class ChildOneOne extends React.Component {
   render() {
     return (
-      <div className="childOne">
+      <div className="childOneOne">
+        <ChildTwo />
+      </div>
+    )
+  }
+}
+
+@MrCss.decorate
+class ChildOneTwo extends React.Component {
+  style() {
+    return {
+      childSelectors: {
+        "i": { fontSize: 48 }
+      }
+    }
+  }
+
+  render() {
+    return (
+      <div className="childOneTwo">
         <ChildTwo />
       </div>
     )
@@ -44,8 +54,19 @@ class ChildOne extends React.Component {
 class Root extends React.Component {
   style() {
     return {
-      "span i": {
-        background: 'red'
+      color: 'green',
+      childSelectors: {
+        "span i": {
+          color: 'red'
+        },
+
+        "p i": {
+          color: 'blue'
+        },
+
+        "ChildOneOne": {
+          background: 'purple'
+        },
       }
     }
   }
@@ -53,7 +74,8 @@ class Root extends React.Component {
   render() {
     return (
       <div className="root">
-        <ChildOne />
+        <ChildOneOne />
+        <ChildOneTwo />
       </div>
     )
   }

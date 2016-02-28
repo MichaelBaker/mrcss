@@ -42,6 +42,6 @@ export default class Selector {
 
   find(selector) {
     const tags = I(selector).reverse()
-    return Selector.findLoop(I([this.selectorTree]), tags, selector).toJS()
+    return Selector.findLoop(I([this.selectorTree]), tags, selector)
   }
 }

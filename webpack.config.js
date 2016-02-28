@@ -1,5 +1,4 @@
-var webpack = require('webpack');
-var path    = require('path');
+var path = require('path');
 
 module.exports = {
     resolve: {
@@ -14,11 +13,6 @@ module.exports = {
         path:     path.resolve(__dirname, 'dist'),
         filename: 'bundle.js'
     },
-
-    plugins: [
-        new webpack.optimize.CommonsChunkPlugin({ name: "vendor", filename: 'vendor.bundle.js' }),
-        new webpack.optimize.CommonsChunkPlugin({ name: "mr-css", filename: 'mr-css.bundle.js' })
-    ],
 
     module: {
         loaders: [
