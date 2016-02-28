@@ -1,4 +1,5 @@
-var path = require('path');
+var webpack = require('webpack');
+var path    = require('path');
 
 module.exports = {
     resolve: {
@@ -14,15 +15,21 @@ module.exports = {
         filename: 'bundle.js'
     },
 
+    plugins: [
+        new webpack.optimize.CommonsChunkPlugin({ name: "vendor", filename: 'vendor.bundle.js' }),
+        new webpack.optimize.CommonsChunkPlugin({ name: "mr-css", filename: 'mr-css.bundle.js' })
+    ],
+
     module: {
         loaders: [
             {
                 test:    /\.es6$/,
                 exclude: /node_modules/,
-                loader:  'babel',
+                loader:  'babel-loader',
                 query:   {
-                  plugins: ['babel-plugin-transform-decorators-legacy'],
-                  presets: ['es2015', 'stage-1', 'react']
+                    cacheDirectory: true,
+                    presets: ['es2015', 'stage-1', 'react'],
+                    plugins: ['babel-plugin-transform-decorators-legacy']
                 }
             }
         ]

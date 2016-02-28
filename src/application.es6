@@ -1,7 +1,3 @@
-import React    from 'react'
-import ReactDOM from 'react-dom'
-import I        from 'immutable'
-
 // TODO
 // ----
 // * When an element gets rendered, update all of its child components with its styles as their "parent" styles.
@@ -11,56 +7,24 @@ import I        from 'immutable'
 
 // * HANDLE TEXT NODES
 
-class MrCss {
-  static decorate(target) {
-    target.prototype._mrCssOriginalRender = target.prototype.render
-    target.prototype.render               = MrCss.render
-  }
-
-  static render() {
-    const originalElement = this._mrCssOriginalRender()
-    const component       = this.constructor.name
-    const elementTag      = originalElement.type
-    const parentPath      = this.props._mrCssParentPath || I.fromJS([])
-    const path            = parentPath.push(I.fromJS({ component, elementTag }))
-    const newChildren     = React.Children.map(originalElement.props.children, c => MrCss.styleChildren(c, path))
-
-    console.log(`Component:     ${component}`)
-    console.log(`Rendered Type: ${elementTag}`)
-    console.log(`Path:          ${path}`)
-    console.log('')
-    return React.cloneElement(originalElement, { _mrCssPath: path }, newChildren)
-  }
-
-  static styleChildren(element, path) {
-    if (!element.type)                return element
-    if (element._mrCssOriginalRender) return React.cloneElement(element, { _mrCssParentPath: path })
-
-    const children    = (element.props && element.props.children) || []
-    const elementTag  = element.type
-    const newPath     = path.push(I.fromJS({ elementTag }))
-    const newChildren = React.Children.map(children, (c) => MrCss.styleChildren(c, newPath))
-    return React.cloneElement(element, { _mrCssParentPath: path }, newChildren)
-  }
-}
-
+import React    from 'react'
+import ReactDOM from 'react-dom'
+import MrCss    from 'mr-css.es6'
 
 @MrCss.decorate
 class ChildTwo extends React.Component {
-  getStyles() {
-    return [{ color: 'green' }]
-  }
-
   render() {
     return (
-      <p className="childTwo">
+      <div className="childTwo">
+        <span>
+          <i>hello</i>
+          <b>hello</b>
+        </span>
         <p>
-          <span>
-            <i>hello</i>
-            <b>hello</b>
-          </span>
+          <i>hello</i>
+          <b>hello</b>
         </p>
-      </p>
+      </div>
     )
   }
 }
@@ -78,6 +42,14 @@ class ChildOne extends React.Component {
 
 @MrCss.decorate
 class Root extends React.Component {
+  style() {
+    return {
+      "span i": {
+        background: 'red'
+      }
+    }
+  }
+
   render() {
     return (
       <div className="root">
