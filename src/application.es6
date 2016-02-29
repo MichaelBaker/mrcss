@@ -4,6 +4,7 @@ import MrCss    from 'mr-css.es6'
 
 // TODO: Error with none function predicate
 // TODO: Error with none function compute
+// TODO: Make sure style insertion works cross-browser
 
 @MrCss.decorate
 class ChildTwo extends React.Component {
@@ -58,6 +59,7 @@ class Root extends React.Component {
   style() {
     return {
       color: 'green',
+      literalCSS: 'mrCSSTarget:hover { background: green }',
       childSelectors: {
         "div": {
           compute: (elem) => {
@@ -74,7 +76,8 @@ class Root extends React.Component {
         },
 
         "span i": {
-          color:     'red'
+          color:     'red',
+          literalCSS: 'mrCSSTarget:hover { background: gray }'
         },
 
         "p i": {
