@@ -35,7 +35,7 @@ export default class MrCss {
     const immutStyles      = I(styles || {})
     const newSelectors     = MrCss.objectToSelectors(parentSelectors, immutStyles.get('childSelectors'))
     const myStyles         = immutStyles.delete('childSelectors')
-    const finalStyles      = MrCss.mergeStyles(EmptyList.push([originalElement, this]), parentSelectors.find(path).push(myStyles))
+    const finalStyles      = MrCss.mergeStyles(EmptyList.push(originalElement).push(this), parentSelectors.find(path).push(myStyles))
 
     const newChildren = React.Children.map(originalElement.props.children, (c) => {
       return MrCss.styleChildren(c, path, newSelectors)
@@ -59,14 +59,16 @@ export default class MrCss {
 
   static mergeStyles(elements, styles) {
     return styles.reduce((finalStyle, style) => {
-      const predicate = style.get('predicate')
-      if (predicate && elements.some(predicate)) {
-        const onlyStyles = style.delete('predicate')
-        return finalStyle.merge(onlyStyles)
-      } else if (predicate) {
-        return finalStyle
+      const predicate  = style.get('predicate')
+      const compute    = style.get('compute')
+      const onlyStyles = style.delete('predicate').delete('compute')
+      const matches    = !predicate || elements.some(predicate)
+
+      if (matches) {
+        const computedStyles = (compute && elements.map(compute)) || EmptyList
+        return computedStyles.push(onlyStyles).reduce((acc, x) => acc.merge(I(x)), finalStyle)
       } else {
-        return finalStyle.merge(style)
+        return finalStyle
       }
     }, EmptyMap)
   }

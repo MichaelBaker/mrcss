@@ -2,11 +2,14 @@ import React    from 'react'
 import ReactDOM from 'react-dom'
 import MrCss    from 'mr-css.es6'
 
+// TODO: Error with none function predicate
+// TODO: Error with none function compute
+
 @MrCss.decorate
 class ChildTwo extends React.Component {
   render() {
     return (
-      <div className="childTwo">
+      <div mahBorder={this.props.mahBorder} className="childTwo">
         <span>
           <i>hello i</i>
           <b>hello b</b>
@@ -25,7 +28,7 @@ class ChildOneOne extends React.Component {
   render() {
     return (
       <div className="childOneOne">
-        <ChildTwo />
+        <ChildTwo mahBorder={2} />
       </div>
     )
   }
@@ -44,7 +47,7 @@ class ChildOneTwo extends React.Component {
   render() {
     return (
       <div className="childOneTwo">
-        <ChildTwo />
+        <ChildTwo mahBorder={4} />
       </div>
     )
   }
@@ -55,13 +58,21 @@ class Root extends React.Component {
   style() {
     return {
       color: 'green',
-      functionSelectors: [
-      ],
       childSelectors: {
+        "div": {
+          compute: (elem) => {
+            if (elem.props.mahBorder) return {
+              margin: elem.props.mahBorder * 4,
+              border: `${elem.props.mahBorder * elem.props.mahBorder}px solid magenta`
+            }
+          }
+        },
+
         "i": {
           predicate:  (elem) => elem.props.thingy,
           background: 'yellow'
         },
+
         "span i": {
           color:     'red'
         },
