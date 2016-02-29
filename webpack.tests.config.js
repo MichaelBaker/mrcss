@@ -8,7 +8,7 @@ module.exports = {
     },
 
     entry: {
-        javascript: path.resolve(__dirname, 'test/mrcss-selectors.es6')
+        javascript: path.resolve(__dirname, 'test/tests.es6')
     },
 
     output: {

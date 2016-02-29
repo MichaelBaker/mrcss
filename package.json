@@ -6,7 +6,7 @@
   "scripts": {
     "compile": "webpack --config webpack.tests.config.js --target node",
     "analyze": "webpack --config webpack.tests.config.js webpack --profile --json > stats.json",
-    "test": "webpack --config webpack.tests.config.js --target node && mocha test-dist/test.js"
+    "test":    "webpack --config webpack.tests.config.js --target node && mocha test-dist/test.js"
   },
   "author": "Michael Baker",
   "license": "MIT",
