@@ -30,7 +30,7 @@ export default class MrCss {
 
     const styles           = this.style && this.style()
     const immutStyles      = I(styles || {})
-    const newSelectors     = MrCss.objectToSelectors(parentSelectors, immutStyles.get('childSelectors'))
+    const newSelectors     = MrCss.addSelectors(parentSelectors, immutStyles.get('childSelectors'))
     const myStyles         = parentSelectors.find(path).push(immutStyles.delete('childSelectors'))
     const styleProps       = MrCss.styleProps(originalElement, EmptyList.push(originalElement).push(this), myStyles)
 
@@ -110,7 +110,7 @@ export default class MrCss {
     return className
   }
 
-  static objectToSelectors(oldSelectors, object) {
+  static addSelectors(oldSelectors, object) {
     if (!object) return oldSelectors
     return I(object).reduce((acc, value, selector) => {
       const selectorArray = selector.split(' ')
@@ -118,4 +118,3 @@ export default class MrCss {
     }, oldSelectors)
   }
 }
-

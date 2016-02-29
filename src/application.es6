@@ -5,6 +5,8 @@ import MrCss    from 'mr-css-decorator.es6'
 // TODO: Error with none function predicate
 // TODO: Error with none function compute
 // TODO: Make sure style insertion works cross-browser
+// TODO: Add comments
+// TODO: Make this a legit NPM package
 
 @MrCss
 class ChildTwo extends React.Component {
