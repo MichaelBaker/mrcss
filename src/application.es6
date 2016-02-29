@@ -1,12 +1,12 @@
 import React    from 'react'
 import ReactDOM from 'react-dom'
-import MrCss    from 'mr-css.es6'
+import MrCss    from 'mr-css-decorator.es6'
 
 // TODO: Error with none function predicate
 // TODO: Error with none function compute
 // TODO: Make sure style insertion works cross-browser
 
-@MrCss.decorate
+@MrCss
 class ChildTwo extends React.Component {
   render() {
     return (
@@ -24,7 +24,7 @@ class ChildTwo extends React.Component {
   }
 }
 
-@MrCss.decorate
+@MrCss
 class ChildOneOne extends React.Component {
   render() {
     return (
@@ -35,7 +35,7 @@ class ChildOneOne extends React.Component {
   }
 }
 
-@MrCss.decorate
+@MrCss
 class ChildOneTwo extends React.Component {
   style() {
     return {
@@ -54,7 +54,7 @@ class ChildOneTwo extends React.Component {
   }
 }
 
-@MrCss.decorate
+@MrCss
 class Root extends React.Component {
   style() {
     return {

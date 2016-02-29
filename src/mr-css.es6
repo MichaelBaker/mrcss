@@ -9,11 +9,6 @@ const EmptyMap  = I({})
 const EmptyList = I([])
 
 export default class MrCss {
-  static decorate(target) {
-    target.prototype._mrCssOriginalRender = target.prototype.render
-    target.prototype.render               = MrCss.render
-  }
-
   static render() {
     const originalElement = this._mrCssOriginalRender()
 
