@@ -11,7 +11,7 @@ export default function MrCssDecorator(WrappedComponent) {
     render() {
       const originalElement = WrappedComponent.prototype.render.bind(this)()
 
-      const component       = this.constructor.name
+      const component       = WrappedComponent.name
       const elementTag      = originalElement.type
 
       const parentPath      = this.props._mrCssParentPath      || EmptyList
