@@ -27,8 +27,8 @@ export function mergeStyles(elements, styles) {
     if (matches) {
       const computedStyles = (compute && elements.map(compute)) || EmptyList
       const allStyles      = computedStyles.push(onlyStyles).filter(x => x).map(x => I(x))
-      const literals       = allStyles.map(s => s.get('literalCSS')).filter(x => x)
-      const objects        = allStyles.map(s => s.delete('literalCSS'))
+      const literals       = allStyles.flatMap(s => I(s.get('cssLiterals'))).filter(x => x)
+      const objects        = allStyles.map(s => s.delete('cssLiterals'))
 
       const newStyles     = objects.reduce((acc2, x) => acc2.merge(x), acc.get('styles'))
       const newClassNames = acc.get('classNames').concat(literals.map(installCss))

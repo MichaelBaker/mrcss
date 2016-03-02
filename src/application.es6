@@ -61,7 +61,17 @@ class Root extends React.Component {
   style() {
     return {
       color: 'green',
-      literalCSS: 'mrCSSTarget:hover { background: green }',
+      cssLiterals: [
+        `@media (max-width: 800px) {
+          mrCSSTarget {
+            background: gold;
+          }
+        }`,
+
+        `mrCSSTarget:hover {
+          background: green
+        }`
+      ],
       childSelectors: {
         "div": {
           compute: (elem) => {
@@ -79,7 +89,7 @@ class Root extends React.Component {
 
         "span i": {
           color:     'red',
-          literalCSS: 'mrCSSTarget:hover { background: gray }'
+          cssLiterals: ['mrCSSTarget:hover { background: gray }']
         },
 
         "p i": {
