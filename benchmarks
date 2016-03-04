@@ -1,0 +1,1 @@
+{"date":"2016-03-04T04:48:41.887Z","benchmarks":[{"id":"01bada152405b958af7e5fe4c072d1cee851aa3b","name":"baseline","hz":5333,"deviation":0.000016921565258349215,"percentOfBaseline":100},{"id":"154304a75950d1ef22adda1166eef6a0d5429e0c","name":"three level exact matching","hz":4841,"deviation":0.00002895812925005428,"percentOfBaseline":90.77442340146258}]}

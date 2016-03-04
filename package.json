@@ -4,9 +4,10 @@
   "description": "",
   "main": "application.es6",
   "scripts": {
-    "compile": "webpack --config webpack.tests.config.js --target node",
-    "analyze": "webpack --config webpack.tests.config.js webpack --profile --json > stats.json",
-    "test":    "webpack --config webpack.tests.config.js --target node && mocha test-dist/test.js"
+    "compile":   "webpack --config webpack.tests.config.js     --target node",
+    "analyze":   "webpack --config webpack.tests.config.js     webpack --profile --json > stats.json",
+    "test":      "webpack --config webpack.tests.config.js     --target node && mocha test-dist/test.js",
+    "benchmark": "webpack --config webpack.benchmark.config.js --target node && node bench-dist/benchmark.js >> benchmarks && tail benchmarks"
   },
   "author": "Michael Baker",
   "license": "MIT",
@@ -20,6 +21,7 @@
     "babel-preset-stage-0": "^6.3.13",
     "babel-preset-stage-1": "^6.3.13",
     "babel-require": "^1.0.1",
+    "benchmark": "^2.1.0",
     "mocha": "^2.4.5",
     "webpack": "^1.12.12",
     "webpack-dev-server": "^1.14.1"
