@@ -2,13 +2,19 @@
   "name": "mrcss",
   "version": "1.0.0",
   "description": "",
-  "main": "application.es6",
   "scripts": {
     "compile":   "webpack --config webpack.tests.config.js     --target node",
     "analyze":   "webpack --config webpack.tests.config.js     webpack --profile --json > stats.json",
     "test":      "webpack --config webpack.tests.config.js     --target node && mocha test-dist/test.js",
-    "benchmark": "webpack --config webpack.benchmark.config.js --target node && node bench-dist/benchmark.js >> benchmarks && tail benchmarks"
+    "benchmark": "webpack --config webpack.benchmark.config.js --target node && node bench-dist/benchmark.js >> benchmarks && tail benchmarks",
+    "build":     "babel src --presets babel-preset-es2015,stage-0 --out-dir distribution"
   },
+  "main": "distribution/mr-css.js",
+  "files": [
+    "distribution/mr-css-decorator.js",
+    "distribution/mr-css.js",
+    "distribution/selector.js"
+  ],
   "author": "Michael Baker",
   "license": "MIT",
   "devDependencies": {
